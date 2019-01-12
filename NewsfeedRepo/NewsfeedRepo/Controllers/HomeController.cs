@@ -30,12 +30,17 @@ namespace NewsfeedRepo.Controllers
 			articleToAdd.DatePosted = DateTime.Now;
 			articleToAdd.Body = article.Body;
 			articleToAdd.Title = article.Title;
-			
-			AddArticle(articleToAdd);
+
+			AddArticleToSession(articleToAdd);
 			return Redirect("/");
 		}
 
-		private void AddArticle(Article article)
+		//public void PostComment(Comment comment, Article article)
+		//{
+		//	Session["articles"][article.Id];
+		//}
+
+		private void AddArticleToSession(Article article)
 		{
 			List<Article> articleList;
 			if ((List<Article>)Session["articles"] == null)
@@ -46,9 +51,11 @@ namespace NewsfeedRepo.Controllers
 			{
 				articleList = (List<Article>)Session["articles"];
 			}
-			
+
+			article.Id = Guid.NewGuid();
 			articleList.Add(article);
 			Session["articles"] = articleList;
+			var blah = Session["articles"];
 		}
 	}
 }

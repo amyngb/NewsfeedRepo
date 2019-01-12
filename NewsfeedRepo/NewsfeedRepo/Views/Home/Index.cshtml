@@ -8,30 +8,39 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-		@Html.Partial("CreateArticle")
-    </div>
-	<div class="col-md-6">
-		<h2>Recent Posts</h2>
-		@{
-			var model = (List<NewsfeedRepo.Models.Article>)Session["articles"];
-			if (model != null)
+	@if (User.Identity.IsAuthenticated)
+	{
+		<div class="col-md-6">
+			@Html.Partial("CreateArticle")
+		</div>
+	} 
+
+		<div class="col-md-6">
+			<h2>Recent Posts</h2>
+			@{
+		var model = (List<NewsfeedRepo.Models.Article>)Session["articles"];
+		if (model != null)
+		{
+			foreach (var article in model)
 			{
-				foreach (var article in model)
+				<div>@article.Title</div>
+				<div>@article.Author</div>
+				<div>@article.DatePosted</div>
+				<div>@article.Body</div>
+				@using (Html.BeginForm("PostComment", "Home", FormMethod.Post))
 				{
-					<div>@article.Title</div>
-					<div>@article.Author</div>
-					<div>@article.DatePosted</div>
-					<div>@article.Body</div>
+					
 				}
+
+}
+}
+else
+{
+		<h4>No posted articles</h4>
+}
 			}
-			else
-			{
-				<h4>No posted articles</h4>
-			}
-		}
 
 
 
-	</div>
+		</div>
 </div>

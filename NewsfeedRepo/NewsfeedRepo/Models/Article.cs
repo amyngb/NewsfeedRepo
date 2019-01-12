@@ -12,8 +12,10 @@ namespace NewsfeedRepo.Models
 		public string Title { get; set; }
 		[Required]
 		public string Author { get; set; }
+		public Guid Id { get; set; }
 		public string Body { get; set; }
 		public DateTime DatePosted { get; set; }
 		public DateTime DateRevised { get; set; }
+		public List<Comment> Comments { get; set; }
 	}
 }
