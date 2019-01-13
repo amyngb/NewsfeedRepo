@@ -35,6 +35,13 @@ namespace NewsfeedRepo.Controllers
 			return RedirectToAction("Index");
 		}
 
+		[HttpPost]
+		public ActionResult CreateRevision(ArticleRevision revision)
+		{
+			MakeRevision(revision);
+			return RedirectToAction("Index");
+		}
+
 		public static List<Article> Articles = new List<Article> {
 			new Article
 			{
@@ -54,21 +61,6 @@ namespace NewsfeedRepo.Controllers
 			}
 		};
 
-		public void AddComment(ArticleComment comment)
-		{
-			if (String.IsNullOrEmpty(comment.Comment))
-			{
-				throw new ArgumentNullException();
-			}
-
-			if (Articles[comment.ArticleId].Comments == null)
-			{
-				Articles[comment.ArticleId].Comments = new List<ArticleComment>();
-			}
-
-			Articles[comment.ArticleId].Comments.Add(comment); 			
-		}
-
 		public void AddArticle(Article article)
 		{
 			if (String.IsNullOrEmpty(article.Body) || (String.IsNullOrEmpty(article.Title)))
@@ -81,12 +73,28 @@ namespace NewsfeedRepo.Controllers
 			articleToAdd.DatePosted = DateTime.Now;
 			articleToAdd.Body = article.Body;
 			articleToAdd.Title = article.Title;
+			articleToAdd.Revised = false;
 			if (article.Comments != null)
 			{
 				articleToAdd.Comments = article.Comments;
 			}
 			
 			Articles.Add(articleToAdd);
+		}
+
+		public void AddComment(ArticleComment comment)
+		{
+			if (String.IsNullOrEmpty(comment.Comment))
+			{
+				throw new ArgumentNullException();
+			}
+
+			if (Articles[comment.ArticleId].Comments == null)
+			{
+				Articles[comment.ArticleId].Comments = new List<ArticleComment>();
+			}
+
+			Articles[comment.ArticleId].Comments.Add(comment);
 		}
 
 		public void AddLike(ArticleLike like)
@@ -97,6 +105,13 @@ namespace NewsfeedRepo.Controllers
 			}
 
 			Articles[like.ArticleId].Likes.Add(like);
+		}
+
+		public void MakeRevision(ArticleRevision revision)
+		{
+			Articles[revision.ArticleId].Revised = true;
+			Articles[revision.ArticleId].DateRevised = DateTime.Now;
+			Articles[revision.ArticleId].Body = revision.Revision;
 		}
 
 		public List<Article> GetArticles()

@@ -76,7 +76,6 @@ namespace NewsfeedRepo.Tests.Controllers
 			_controller.AddArticle(_article1);
 
 			var actual = _controller.GetArticles();
-
 			Assert.AreEqual(expected[0].Author, actual[0].Author);
 			Assert.AreEqual(expected[0].Body, actual[0].Body);
 			Assert.AreEqual(expected[0].Comments[0].Comment, actual[0].Comments[0].Comment);
@@ -88,12 +87,10 @@ namespace NewsfeedRepo.Tests.Controllers
 			var articles = new List<Article>() { _article0, _article1 };
 			var expected = articles[1].Comments[0];
 
-
 			_controller.AddComment(_comment1);
 
 			var actualArticles = _controller.GetArticles();
 			var actual = actualArticles[1].Comments[0];
-
 			Assert.AreEqual(expected.Comment, actual.Comment);
 		}
 
@@ -101,7 +98,6 @@ namespace NewsfeedRepo.Tests.Controllers
 		public void GivenALikeIsClicked_AddLike_AddsLikeToArticleInArticleList()
 		{
 			var like = new ArticleLike { ArticleId = 1 };
-
 			var articles = new List<Article>() { _article0, _article1 };
 			var expected = articles[1].Likes.Count;
 			
@@ -109,8 +105,20 @@ namespace NewsfeedRepo.Tests.Controllers
 
 			var actualArticles = _controller.GetArticles();
 			var actual = actualArticles[1].Likes.Count;
-
 			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		public void GivenARevisionIsSubmitted_MakeRevision_MakesRevisionToArticleInArticleList()
+		{
+			var revision = new ArticleRevision { ArticleId = 0, Revision = "testRevision" };
+			
+			_controller.MakeRevision(revision);
+
+			var actualArticles = _controller.GetArticles();
+
+			Assert.AreEqual(true, actualArticles[0].Revised);
+			Assert.AreEqual(revision.Revision, actualArticles[0].Body);
 		}
 
 		[TestMethod]

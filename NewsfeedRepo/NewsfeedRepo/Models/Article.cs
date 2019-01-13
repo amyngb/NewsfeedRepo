@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -17,5 +18,6 @@ namespace NewsfeedRepo.Models
 		public DateTime DateRevised { get; set; }
 		public List<ArticleComment> Comments { get; set; }
 		public List<ArticleLike> Likes { get; set; }
+		public bool Revised { get; set; }
 	}
 }
