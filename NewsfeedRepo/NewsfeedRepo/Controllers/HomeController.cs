@@ -32,7 +32,12 @@ namespace NewsfeedRepo.Controllers
 
 		public void AddComment(ArticleComment comment)
 		{
-			throw new NotImplementedException();
+			if (Articles[comment.ArticleId].Comments == null)
+			{
+				Articles[comment.ArticleId].Comments = new List<ArticleComment>();
+			}
+
+			Articles[comment.ArticleId].Comments.Add(comment); 			
 		}
 
 		public void AddArticle(Article article)
@@ -42,8 +47,12 @@ namespace NewsfeedRepo.Controllers
 			articleToAdd.DatePosted = DateTime.Now;
 			articleToAdd.Body = article.Body;
 			articleToAdd.Title = article.Title;
-
-			Articles.Add(article);
+			if (article.Comments != null)
+			{
+				articleToAdd.Comments = article.Comments;
+			}
+			
+			Articles.Add(articleToAdd);
 		}
 
 		public List<Article> GetArticles()
