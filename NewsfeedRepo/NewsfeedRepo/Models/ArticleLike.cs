@@ -7,7 +7,6 @@ namespace NewsfeedRepo.Models
 {
 	public class ArticleLike
 	{
-		public bool Like { get; set; }
 		public int ArticleId { get; set; }
 	}
 }
