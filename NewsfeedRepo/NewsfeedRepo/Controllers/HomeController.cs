@@ -1,15 +1,15 @@
 ﻿using NewsfeedRepo.Models;
+//using NewsfeedRepo.Managers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace NewsfeedRepo.Controllers
 {
 	public class HomeController : Controller
 	{
+		ArticleManager _articleManager = new ArticleManager();
+
 		public ActionResult Index()
 		{
 			return View();
@@ -25,37 +25,20 @@ namespace NewsfeedRepo.Controllers
 		[HttpPost]
 		public ActionResult CreateArticle(Article article)
 		{
-			var articleToAdd = new Article();
-			articleToAdd.Author	= User.Identity.Name;
-			articleToAdd.DatePosted = DateTime.Now;
-			articleToAdd.Body = article.Body;
-			articleToAdd.Title = article.Title;
-
-			AddArticleToSession(articleToAdd);
+			_articleManager.AddArticle(article);
 			return Redirect("/");
 		}
 
-		//public void PostComment(Comment comment, Article article)
-		//{
-		//	Session["articles"][article.Id];
-		//}
-
-		private void AddArticleToSession(Article article)
+		[HttpGet]
+		public ActionResult ViewArticles()
 		{
-			List<Article> articleList;
-			if ((List<Article>)Session["articles"] == null)
-			{
-				articleList = new List<Article>();
-			}
-			else
-			{
-				articleList = (List<Article>)Session["articles"];
-			}
+			return View();
+		}
 
-			article.Id = Guid.NewGuid();
-			articleList.Add(article);
-			Session["articles"] = articleList;
-			var blah = Session["articles"];
+		[HttpPost]
+		public ActionResult ViewArticles(ArticleComment comment)
+		{
+			return View();
 		}
 	}
 }

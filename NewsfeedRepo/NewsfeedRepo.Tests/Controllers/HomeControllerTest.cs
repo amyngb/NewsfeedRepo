@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewsfeedRepo.Controllers;
+//using NewsfeedRepo.Managers;
 using System;
 using System.Web.Mvc;
 
@@ -8,6 +9,7 @@ namespace NewsfeedRepo.Tests.Controllers
 	[TestClass]
 	public class HomeControllerTest
 	{
+		ArticleManager _articleManager;
 		HomeController _controller;
 		Models.Article _article;
 		
@@ -16,8 +18,6 @@ namespace NewsfeedRepo.Tests.Controllers
 		{
 			_controller = new HomeController();
 			_article = new Models.Article { Author = "testUser", Body = "testBody", DatePosted = DateTime.Now, DateRevised = DateTime.Now, Title = "testTitle" };
-
-
 		}
 
 		[TestMethod]
@@ -39,12 +39,6 @@ namespace NewsfeedRepo.Tests.Controllers
 		{
 			var result = _controller.CreateArticle(_article) as ViewResult;
 			Assert.IsNotNull(result);
-		}
-
-		[TestMethod]
-		public void IsUserSignedIn()
-		{
-			
 		}
 	}
 }
