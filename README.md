@@ -6,4 +6,4 @@ Use Visual Studio to clone and run project.
 
 ### Persistence Information
 ![Image of Entity Relationship] 
-(https://ibb.co/yR6vHg7}
+(https://ibb.co/yR6vHg7)
