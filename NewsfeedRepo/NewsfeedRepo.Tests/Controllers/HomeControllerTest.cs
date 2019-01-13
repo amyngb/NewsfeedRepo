@@ -78,5 +78,29 @@ namespace NewsfeedRepo.Tests.Controllers
 
 			Assert.AreEqual(expected.Comment, actual.Comment);
 		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GivenEmptyStringArticleTitle_AddArticle_ThrowsException()
+		{
+			var emptyArticle = new Article();
+			_controller.AddArticle(emptyArticle);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GivenEmptyStringArticleBody_AddArticle_ThrowsException()
+		{
+			var emptyArticle = new Article();
+			_controller.AddArticle(emptyArticle);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void GivenEmptyStringComment_AddComment_ThrowsException()
+		{
+			var emptyComment = new ArticleComment();
+			_controller.AddComment(emptyComment);
+		}
 	}
 }

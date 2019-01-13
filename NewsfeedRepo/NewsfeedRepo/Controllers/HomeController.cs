@@ -32,6 +32,11 @@ namespace NewsfeedRepo.Controllers
 
 		public void AddComment(ArticleComment comment)
 		{
+			if (String.IsNullOrEmpty(comment.Comment))
+			{
+				throw new ArgumentNullException();
+			}
+
 			if (Articles[comment.ArticleId].Comments == null)
 			{
 				Articles[comment.ArticleId].Comments = new List<ArticleComment>();
@@ -42,6 +47,11 @@ namespace NewsfeedRepo.Controllers
 
 		public void AddArticle(Article article)
 		{
+			if (String.IsNullOrEmpty(article.Body) || (String.IsNullOrEmpty(article.Title)))
+			{
+				throw new ArgumentNullException();
+			}
+
 			var articleToAdd = new Article();
 			articleToAdd.Author = User.Identity.Name.ToString();
 			articleToAdd.DatePosted = DateTime.Now;
