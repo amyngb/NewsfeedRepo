@@ -45,8 +45,6 @@ namespace NewsfeedRepo.Tests.Controllers
 			_articleManager.AddArticle(_article);
 
 			Assert.AreEqual(expected, _articleList);
-
-
 		}
 	}
 }

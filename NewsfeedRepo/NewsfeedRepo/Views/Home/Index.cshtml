@@ -1,9 +1,10 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<NewsfeedRepo.Models.Article>
+@{
+	ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
-    <h1>Lorem Ipsum Blog</h1>
+	<h1>Lorem Ipsum Blog</h1>
 	<p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
 </div>
 
@@ -11,11 +12,26 @@
 	@if (User.Identity.IsAuthenticated)
 	{
 		<div class="col-md-6">
-			@Html.Partial("CreateArticle")
+			@Html.Partial("CreateArticle", new NewsfeedRepo.Models.Article())
 		</div>
-	} 
+	}
 
-		<div class="col-md-6">
-			@Html.Partial("ViewArticles")
-		</div>
+	<div class="col-md-6">
+
+		<h2>Recent Posts</h2>
+
+		@{
+			if (Model == null)
+			{
+				<h4>No posts to display</h4>
+			}
+			else
+			{
+				foreach (var article in Model)
+				{
+					<p>@article.Title</p>
+				}
+			}
+		}
+	</div>
 </div>

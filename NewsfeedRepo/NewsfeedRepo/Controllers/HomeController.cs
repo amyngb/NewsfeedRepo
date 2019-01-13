@@ -1,5 +1,4 @@
 ﻿using NewsfeedRepo.Models;
-//using NewsfeedRepo.Managers;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -8,37 +7,48 @@ namespace NewsfeedRepo.Controllers
 {
 	public class HomeController : Controller
 	{
-		ArticleManager _articleManager = new ArticleManager();
-
+		[HttpGet]
 		public ActionResult Index()
 		{
-			return View();
-		}
-
-		[HttpGet]
-		public ActionResult CreateArticle()
-		{
-			var article = new Article();
-			return View(article);
+			var articleList = GetArticles();
+			return View(articleList);
 		}
 
 		[HttpPost]
 		public ActionResult CreateArticle(Article article)
 		{
-			_articleManager.AddArticle(article);
-			return Redirect("/");
-		}
-
-		[HttpGet]
-		public ActionResult ViewArticles()
-		{
-			return View();
+			AddArticle(article);
+			return RedirectToAction("Index");
 		}
 
 		[HttpPost]
-		public ActionResult ViewArticles(ArticleComment comment)
+		public ActionResult CreateComment(ArticleComment comment)
 		{
-			return View();
+			AddComment(comment);
+			return RedirectToAction("Index");
+		}
+
+		public static List<Article> Articles = new List<Article>();
+
+		public void AddComment(ArticleComment comment)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void AddArticle(Article article)
+		{
+			var articleToAdd = new Article();
+			articleToAdd.Author = User.Identity.Name.ToString();
+			articleToAdd.DatePosted = DateTime.Now;
+			articleToAdd.Body = article.Body;
+			articleToAdd.Title = article.Title;
+
+			Articles.Add(article);
+		}
+
+		public List<Article> GetArticles()
+		{
+			return Articles;
 		}
 	}
 }
