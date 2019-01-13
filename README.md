@@ -9,4 +9,4 @@ It all works, except I couldn't figure out how to get the Razor View to submit a
 
 ### Persistence Information
 Entity Relationship Diagram: https://ibb.co/yR6vHg7
-Instead of using an in memory repository, I'd create a SQL database with the above entity relationships and use CRUD operations.
+Instead of using an in-memory repository (the list of Articles), I'd create a SQL database with the above entity relationships and use CRUD operations.
