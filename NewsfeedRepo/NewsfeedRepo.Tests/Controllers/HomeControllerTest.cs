@@ -2,7 +2,6 @@
 using Moq;
 using NewsfeedRepo.Controllers;
 using NewsfeedRepo.Models;
-//using NewsfeedRepo.Managers;
 using System;
 using System.Collections.Generic;
 using System.Security.Principal;
