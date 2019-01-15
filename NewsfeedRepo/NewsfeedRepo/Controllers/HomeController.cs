@@ -17,7 +17,11 @@ namespace NewsfeedRepo.Controllers
 		[HttpPost]
 		public ActionResult CreateArticle(Article article)
 		{
-			AddArticle(article);
+			if (Request.IsAuthenticated)
+			{
+				AddArticle(article);
+			}
+
 			return RedirectToAction("Index");
 		}
 
@@ -38,7 +42,11 @@ namespace NewsfeedRepo.Controllers
 		[HttpPost]
 		public ActionResult CreateRevision(ArticleRevision revision)
 		{
-			MakeRevision(revision);
+			if (Request.IsAuthenticated && User.Identity.Name == Articles[revision.ArticleId].Author)
+			{
+				MakeRevision(revision);
+			}
+			
 			return RedirectToAction("Index");
 		}
 

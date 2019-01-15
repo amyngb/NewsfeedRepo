@@ -18,31 +18,27 @@ namespace NewsfeedRepo.Tests.Controllers
 		private Article _article1;
 		private ArticleComment _comment0;
 		private ArticleComment _comment1;
+		private ArticleRevision _revision;
 
-		private Mock<HttpContextBase> moqContext;
 		private Mock<ControllerContext> moqControllerContext;
-		private Mock<HttpRequestBase> moqRequest;
 		private Mock<IPrincipal> moqPrincipal;
 
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			moqContext = new Mock<HttpContextBase>();
-			moqRequest = new Mock<HttpRequestBase>();
 			moqPrincipal = new Mock<IPrincipal>();
 			moqControllerContext = new Mock<ControllerContext>();
-
-			moqPrincipal.Setup(p => p.IsInRole("Administrator")).Returns(true);
 			moqPrincipal.SetupGet(x => x.Identity.Name).Returns("testUser");
 			moqControllerContext.SetupGet(x => x.HttpContext.User).Returns(moqPrincipal.Object);
+			moqControllerContext.SetupGet(p => p.HttpContext.Request.IsAuthenticated).Returns(true);
+
 
 			_controller = new HomeController();
 			_controller.ControllerContext = moqControllerContext.Object;
 
 			_comment0 = new ArticleComment { ArticleId = 0, Comment = "testComment0" };
 			_comment1 = new ArticleComment { ArticleId = 0, Comment = "testComment1" };
-			_article0 = new Article
-			{
+			_article0 = new Article {
 				Author = "amyngbedinghaus@gmail.com",
 				Title = "Interesting article",
 				DatePosted = DateTime.Now,
@@ -57,6 +53,7 @@ namespace NewsfeedRepo.Tests.Controllers
 				},
 				Likes = new List<ArticleLike>()
 			};
+
 			_article1 = new Article {
 				Author = "testUser",
 				Body = "testBody",
@@ -65,6 +62,44 @@ namespace NewsfeedRepo.Tests.Controllers
 				Comments = new List<ArticleComment> { _comment0, _comment1},
 				Likes = new List<ArticleLike> { new ArticleLike { ArticleId = 1 } }
 			};
+
+			_revision = new ArticleRevision { ArticleId = 0, Revision = "testRevision" };
+		}
+
+		[TestMethod]
+		public void Index()
+		{			
+			ViewResult result = _controller.Index() as ViewResult;
+			Assert.IsNotNull(result);
+		}
+
+		[TestMethod]
+		public void GivenUnauthenticatedUser_WhenCallingCreateArticle_AddArticleIsNotCalled()
+		{
+			moqControllerContext.SetupGet(p => p.HttpContext.Request.IsAuthenticated).Returns(false);
+			var expected = _controller.GetArticles();
+
+			_controller.CreateArticle(_article1);
+
+			var actual = _controller.GetArticles();
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		public void GivenAuthenticatedUser_WhenCallingCreateArticle_AddArticleIsCalled()
+		{
+			var expected = new List<Article>() { _article0, _article1 };
+
+			_controller.CreateArticle(_article1);
+
+			var actual = _controller.GetArticles();
+
+			Assert.AreEqual(expected[0].Author, actual[0].Author);
+			Assert.AreEqual(expected[1].Author, actual[1].Author);
+			Assert.AreEqual(expected[0].Body, actual[0].Body);
+			Assert.AreEqual(expected[1].Body, actual[1].Body);			
+			Assert.AreEqual(expected[0].Comments[0].Comment, actual[0].Comments[0].Comment);
+			Assert.AreEqual(expected[1].Comments[0].Comment, actual[1].Comments[0].Comment);
 		}
 
 		[TestMethod]
@@ -76,8 +111,11 @@ namespace NewsfeedRepo.Tests.Controllers
 
 			var actual = _controller.GetArticles();
 			Assert.AreEqual(expected[0].Author, actual[0].Author);
+			Assert.AreEqual(expected[1].Author, actual[1].Author);
 			Assert.AreEqual(expected[0].Body, actual[0].Body);
+			Assert.AreEqual(expected[1].Body, actual[1].Body);
 			Assert.AreEqual(expected[0].Comments[0].Comment, actual[0].Comments[0].Comment);
+			Assert.AreEqual(expected[1].Comments[0].Comment, actual[1].Comments[0].Comment);
 		}
 
 		[TestMethod]
@@ -108,16 +146,40 @@ namespace NewsfeedRepo.Tests.Controllers
 		}
 
 		[TestMethod]
+		public void GivenUnauthenticatedUser_WhenCallingCreateRevision_ReviseArticleIsNotCalled()
+		{
+			moqControllerContext.SetupGet(p => p.HttpContext.Request.IsAuthenticated).Returns(false);
+
+			var expected = _controller.GetArticles();
+
+			_controller.CreateRevision(_revision);
+
+			var actual = _controller.GetArticles();
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		public void GivenAuthenticatedUserWithDifferentUserName_WhenCallingCreateRevision_ReviseArticleIsNotCalled()
+		{
+			moqPrincipal.SetupGet(x => x.Identity.Name).Returns("differentTestUser");
+			moqControllerContext.SetupGet(x => x.HttpContext.User).Returns(moqPrincipal.Object);
+			var expected = _controller.GetArticles();
+
+			_controller.CreateRevision(_revision);
+
+			var actual = _controller.GetArticles();
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
 		public void GivenARevisionIsSubmitted_MakeRevision_MakesRevisionToArticleInArticleList()
 		{
-			var revision = new ArticleRevision { ArticleId = 0, Revision = "testRevision" };
-			
-			_controller.MakeRevision(revision);
+			_controller.MakeRevision(_revision);
 
 			var actualArticles = _controller.GetArticles();
 
 			Assert.AreEqual(true, actualArticles[0].Revised);
-			Assert.AreEqual(revision.Revision, actualArticles[0].Body);
+			Assert.AreEqual(_revision.Revision, actualArticles[0].Body);
 		}
 
 		[TestMethod]
