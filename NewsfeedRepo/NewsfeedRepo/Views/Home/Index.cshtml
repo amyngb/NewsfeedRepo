@@ -47,8 +47,26 @@
 							}
 						}
 						if (articles[i].Author == User.Identity.Name)
-						{
-							@Html.Partial("CreateRevision", new NewsfeedRepo.Models.ArticleRevision(), new ViewDataDictionary() { { "index", @i } });
+						{						
+							using (Html.BeginForm("CreateRevision", "Home", FormMethod.Post))
+							{
+
+								@Html.AntiForgeryToken()
+								<div class="form-horizontal">
+									<input type="hidden" name="ArticleId" value="@ViewData["index"]" />
+									<div class="form-group">
+										@Html.LabelFor(model => model[i].Revision.Revision, htmlAttributes: new { @class = "control-label col-md-2" })
+										<div class="col-md-10">
+											@Html.EditorFor(model => model[i].Revision.Revision, new { htmlAttributes = new { @class = "form-control" } })
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-offset-2 col-md-10">
+											<input type="submit" value="Revise" class="btn btn-default" />
+										</div>
+									</div>
+								</div>
+							}
 						}
 
 						<div class="row">							
@@ -59,7 +77,6 @@
 							<div class="col-sm-1">
 								@using (Html.BeginForm("CreateLike", "Home", FormMethod.Post))
 								{
-								var likeModel = new NewsfeedRepo.Models.ArticleLike();
 								<input type="hidden" name="ArticleId" value="@i" />
 								<input type="submit" class="btn btn-default glyphicon glyphicon-thumbs-up" value="Like" />
 								}

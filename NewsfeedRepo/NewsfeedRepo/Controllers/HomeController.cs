@@ -19,13 +19,7 @@ namespace NewsfeedRepo.Controllers
 		{
 			return View();
 		}
-
-		[HttpGet]
-		public ActionResult CreateRevisioin()
-		{
-			return View();
-		}
-
+		
 		[HttpPost]
 		public ActionResult CreateArticle(Article article)
 		{

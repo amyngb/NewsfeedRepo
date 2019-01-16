@@ -11,10 +11,12 @@ namespace NewsfeedRepo.Models
 		[Required]
 		public string Author { get; set; }
 		public string Body { get; set; }
+		public ArticleRevision Revision { get; set; }
 		public DateTime DatePosted { get; set; }
 		public DateTime DateRevised { get; set; }
 		public List<ArticleComment> Comments { get; set; }
 		public List<ArticleLike> Likes { get; set; }
 		public bool Revised { get; set; }
+		
 	}
 }
