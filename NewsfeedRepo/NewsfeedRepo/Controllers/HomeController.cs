@@ -14,6 +14,18 @@ namespace NewsfeedRepo.Controllers
 			return View(articleList);
 		}
 
+		[HttpGet]
+		public ActionResult CreateComment()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public ActionResult CreateRevisioin()
+		{
+			return View();
+		}
+
 		[HttpPost]
 		public ActionResult CreateArticle(Article article)
 		{
@@ -97,29 +109,33 @@ namespace NewsfeedRepo.Controllers
 				throw new ArgumentNullException();
 			}
 
-			if (Articles[comment.ArticleId].Comments == null)
+			var index = comment.ArticleId;
+
+			if (Articles[index].Comments == null)
 			{
-				Articles[comment.ArticleId].Comments = new List<ArticleComment>();
+				Articles[index].Comments = new List<ArticleComment>();
 			}
 
-			Articles[comment.ArticleId].Comments.Add(comment);
+			Articles[index].Comments.Add(comment);
 		}
 
 		public void AddLike(ArticleLike like)
 		{
-			if (Articles[like.ArticleId].Likes == null)
+			var index = like.ArticleId;
+			if (Articles[index].Likes == null)
 			{
-				Articles[like.ArticleId].Likes = new List<ArticleLike>();
+				Articles[index].Likes = new List<ArticleLike>();
 			}
 
-			Articles[like.ArticleId].Likes.Add(like);
+			Articles[index].Likes.Add(like);
 		}
 
 		public void MakeRevision(ArticleRevision revision)
 		{
-			Articles[revision.ArticleId].Revised = true;
-			Articles[revision.ArticleId].DateRevised = DateTime.Now;
-			Articles[revision.ArticleId].Body = revision.Revision;
+			var index = revision.ArticleId;
+			Articles[index].Revised = true;
+			Articles[index].DateRevised = DateTime.Now;
+			Articles[index].Body = revision.Revision;
 		}
 
 		public List<Article> GetArticles()
